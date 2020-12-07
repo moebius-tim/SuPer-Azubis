@@ -1,0 +1,121 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace MaxTemp
+{
+    /// <summary>
+    /// Interaktionslogik für MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        /// <summary>
+        /// Diese Routine (EventHandler des Buttons Auswerten) liest die Werte
+        /// zeilenweise aus der Datei temps.csv aus, merkt sich den höchsten Wert
+        /// und gibt diesen auf der Oberfläche aus.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnAuswerten_Click(object sender, RoutedEventArgs e)
+        {
+            //Zugriff auf Datei erstellen.
+
+            FileStream fs = new FileStream(@"temps.csv", FileMode.Open);  // "Temps.csv" muss an der gleichen Stelle wie die Exe liegen ! 
+            StreamReader sr = new StreamReader(fs);
+            double maxWert = 0.0;
+            double minWert = 100;
+            double avgWert = 0.0;
+            double var = 0.0;
+            double w1 = 0.0;
+            string avgWert_str; 
+
+            //In einer Schleife die Werte holen und auswerten. Den größten Wert "merken". //Anfangswert setzen, um sinnvoll vergleichen zu können.
+
+            /*while (sr.EndOfStream == false)
+            {
+                string zeile = sr.ReadLine();
+                string[] werte = zeile.Split(',');
+                string zahl = werte[2];
+                string zahlDeu = zahl.Replace('.', ',');
+                w1 = Convert.ToDouble(zahlDeu);
+
+                if (w1 > maxWert)
+                {
+                    maxWert = w1; 
+                }
+                
+            }
+
+            lblAusgabe.Content = maxWert;
+
+    */
+
+            /*while (sr.EndOfStream == false)
+            {
+                string zeile = sr.ReadLine();
+                string[] werte = zeile.Split(',');
+                string zahl = werte[2];
+                string zahlDeu = zahl.Replace('.', ',');
+                w1 = Convert.ToDouble(zahlDeu);
+
+                if (w1 < minWert)
+                {
+                    minWert = w1;
+                }
+
+            }
+
+            lblAusgabe.Content = minWert;
+            */
+
+            while (sr.EndOfStream == false)
+            {
+                var++;
+                string zeile = sr.ReadLine();
+                string[] werte = zeile.Split(',');
+                string zahl = werte[2];
+                string zahlDeu = zahl.Replace('.', ',');
+                w1 = Convert.ToDouble(zahlDeu);
+
+                avgWert += w1; 
+            }
+
+            avgWert /= var;
+
+            avgWert_str = Convert.ToString(avgWert); 
+
+            lblAusgabe.Content = avgWert_str;
+
+            //Datei wieder freigeben.
+
+            sr.Close();
+            fs.Close(); 
+            
+            //Höchstwert auf Oberfläche ausgeben.
+
+            MessageBox.Show("Temperaturen wurden ausgemessen!");
+            //lblAusgabe.Content = "Das Ergebnis";
+            //kommentieren Sie die Exception aus.
+            //throw new Exception("peng");
+        }
+        
+    }
+}
